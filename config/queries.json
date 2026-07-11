@@ -33,5 +33,17 @@
     },
     "whereIsThisUsed?":{
         "verifyDuplicate": "SELECT u.users_name, u.users_email FROM security.users AS u WHERE u.users_name = $1 OR u.users_email = $2;"
+    },
+    "rating":{
+        "addRating": "INSERT INTO film.rating (fk_users_id, fk_anime_id, rating_score, rating_comment) VALUES ($1, $2, $3, $4);",
+        "getRating": "SELECT u.fk_profile_id, COUNT(*) AS total_ratings, AVG(f.rating_score) AS avg_score, ARRAY_AGG(f.rating_comment) FILTER (WHERE f.rating_comment IS NOT NULL) AS comments FROM film.rating f INNER JOIN security.users u ON f.fk_users_name = u.users_name WHERE f.fk_anime_id = $1 GROUP BY u.fk_profile_id ORDER BY u.fk_profile_id;",
+        "deleteRating": "DELETE FROM film.rating WHERE fk_users_id = $1 AND fk_anime_id = $2;",
+        "updateRating": "UPDATE film.rating SET rating_score = $1, rating_comment = $2 WHERE fk_users_id = $3 AND fk_anime_id = $4;"
+    },
+    "status":{
+        "getStatus": "SELECT s.status_status AS status FROM film.status s WHERE s.fk_users_name = $1 AND s.fk_anime_id = $2;",
+        "addStatus": "INSERT INTO film.status (fk_users_name, fk_anime_id, status_status) VALUES ($1, $2, $3);",
+        "updateStatus": "UPDATE film.status SET status_status = $1 WHERE fk_users_name = $2 AND fk_anime_id = $3;",
+        "deleteStatus": "DELETE FROM film.status WHERE fk_users_name = $1 AND fk_anime_id = $2;"
     }
 }
