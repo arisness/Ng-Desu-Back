@@ -1,0 +1,46 @@
+# ==============================================
+#  PRODUCTION APP STACK
+#  - API Service (Binds Traefik routing -> App)
+# ==============================================
+
+services:
+  api:
+    # Pulls the branch name as the image tag
+    image: ghcr.io/arisness/ng-desu:${IMAGE_TAG}
+    # Prefix containers with the business name
+    container_name: ng-desu-api-1
+    restart: unless-stopped
+    networks:
+      - web-network       # For Traefik
+      - internal-network  # For internal communication
+    volumes:
+      - ./config/.env:/app/config/.env:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: 5
+    environment:
+      - APP_ENV=production
+    labels:
+      # Expose this container
+      - "traefik.enable=true"
+
+      # Catch every request that starts with /api
+      - "traefik.http.routers.ng-desu-api.rule=Host(`ng-desu.kaucrow.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.ng-desu-api.entrypoints=websecure"
+      - "traefik.http.routers.ng-desu-api.tls=true"
+      - "traefik.http.routers.ng-desu-api.tls.certresolver=certresolver"
+
+      # Strip "/api" off the front of every path
+      - "traefik.http.middlewares.ng-desu-api-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.ng-desu-api.middlewares=ng-desu-api-strip"
+
+      # Forward the stripped request to the app port
+      - "traefik.http.services.ng-desu-api.loadbalancer.server.port=3000"
+
+networks:
+  web-network:
+    external: true  # Use the Traefik bridge
+  internal-network:
+    driver: bridge  # Private local virtual network bridge
