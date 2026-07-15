@@ -20,6 +20,18 @@ class UserManagement
             return res.status(500).json({status: 'error', message: 'Internal server error during registration.'});
         }
     }
+
+    async addCritic(req, res){
+        try{
+            const {username, email, password} = req.body;
+            const r = await runQuery([[queries.user.registerUser, [username, email, password, 2]]]);
+            return res.status(201).json({status: 'success', message: 'User registered successfully.'});
+        }
+        catch (error){
+            logger.error(`Error during registration: ${error}`);
+            return res.status(500).json({status: 'error', message: 'Internal server error during registration.'});
+        }
+    }
     
     /**
      * Checks user existence by email or username, returns false if user doesn't exist, otherwise returns an object with username and email
