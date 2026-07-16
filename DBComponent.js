@@ -20,7 +20,6 @@ const pool = new Pool
 export const runQuery = async (queries) =>
 {
     const connection = await pool.connect();
-
     try
     {
         await connection.query('BEGIN');
