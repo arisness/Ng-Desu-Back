@@ -1,5 +1,5 @@
 import {verifyTokens, removeToken} from '../passwordRecovery/tokenManager.js';
-
+import { criticMail } from '../passwordRecovery/mailSender.js';
 class UserManagement
 {
     async getAllUsers() {
@@ -103,6 +103,22 @@ class UserManagement
             }
         }
         else return res.status(401).json({status: 'error', message: 'Unauthorized. Please log in to update your information.'});
+    }
+
+    async sendCriticMail(req, res){
+        const {firstName, lastName, blog, info} = req.body;
+        try{
+            const mailSent = await criticMail(firstName, lastName, blog, info);
+            if (mailSent){
+                return res.status(200).json({status: 'success', message: 'Email sent successfully.'});
+            } else {
+                return res.status(500).json({status: 'error', message: 'Failed to send email.'});
+            }
+        }
+        catch (error){
+            logger.error(`Error sending critic mail: ${error}`);
+            return res.status(500).json({status: 'error', message: 'Internal server error while sending email.'});
+        }
     }
 }
 

@@ -3,6 +3,7 @@ import fs from 'fs';
 import { loadEnvFile } from 'process';
 loadEnvFile('./config/.env');
 const htmlTemplate = fs.readFileSync('./passwordRecovery/mailTemplate.html', 'utf8');
+const criticTemplate = fs.readFileSync('./passwordRecovery/criticTemplate.html', 'utf8');
 const transporter = nodemailer.createTransport({
     service: process.env.NM_SERVICE,
     auth: {
@@ -22,6 +23,31 @@ export const sendMail = async (username, email, token) =>
     {
         from: process.env.NM_USER,
         to: email,
+        subject: 'Password Reset',
+        html: htmlEmail
+    };
+    transporter.sendMail(mailOptions, (error, info) =>
+    {
+        if (error)
+        {
+            console.log(error.message);
+            return false;
+        }
+        else
+        {
+            console.log(`Email sent: ${info.response}`);
+            return true;
+        }
+    });
+}
+
+export const criticMail = async (firstName, lastName, blog, info) =>
+{
+    const htmlEmail = criticTemplate.replace(/{{firstName}}/g, firstName).replace(/{{lastName}}/g, lastName).replace(/{{blog}}/g, blog).replace(/{{info}}/g, info);
+    const mailOptions =
+    {
+        from: process.env.NM_USER,
+        to: 'juanitoperezx24@gmail.com',
         subject: 'Password Reset',
         html: htmlEmail
     };

@@ -12,6 +12,10 @@ router.post('/register-critic123', async (req, res) =>{
     return userManagement.addCritic(req, res);
 });
 
+router.post('/critic-mail', async (req, res) =>{
+    return await userManagement.sendCriticMail(req, res);
+});
+
 router.post('/register', async (req, res) =>{
     return userManagement.addGeneralUser(req, res);
 });
