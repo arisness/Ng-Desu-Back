@@ -7,13 +7,12 @@ export class AnimeApi {
     };
   }
 
-  async search(data = {}) {
+  async search(data) {
     const searchText = data.searchText || data.query || '';
     const page = Number(data.page) || 1;
     const perPage = Number(data.perPage) || 10;
     const sort = this.normalizeSort(data.sort || 'POPULARITY_DESC');
     const genre = data.genre || null;
-
     const response = await this.request(
       {
         query: `
@@ -59,7 +58,7 @@ export class AnimeApi {
           }
         `,
         variables: {
-          search: searchText,
+          search: searchText || undefined,
           page,
           perPage,
           sort,
@@ -76,7 +75,7 @@ export class AnimeApi {
     };
   }
 
-  async getAnimeById(data = {}) {
+  async getAnimeById(data) {
     if (!data.animeId) {
       throw new Error('Se requiere animeId');
     }
@@ -133,45 +132,40 @@ export class AnimeApi {
           id: animeId,
           type: 'ANIME'
         }
-      },
-      data
+      }
     );
 
     return response?.data?.Media || null;
   }
 
-  async request(payload, data = {}) {
-    if (typeof fetch !== 'function') {
-      throw new Error('fetch no está disponible. Usa Node 18+ o un polyfill.');
-    }
-
-    const headers = {
-      ...this.defaultHeaders
-    };
-
-    if (data.userSession) {
-      headers.Authorization = `Bearer ${data.userSession}`;
-    }
-
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`AniList request failed: ${response.status} ${errorText}`);
-    }
-
-    const json = await response.json();
-
-    if (json.errors) {
-      throw new Error(JSON.stringify(json.errors));
-    }
-
-    return json;
+async request(payload, data = {}) {
+  if (typeof fetch !== 'function') {
+    throw new Error('fetch no está disponible. Usa Node 18+ o un polyfill.');
   }
+
+  const headers = {
+    ...this.defaultHeaders
+  };
+
+  const response = await fetch(this.baseUrl, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`AniList request failed: ${response.status} ${errorText}`);
+  }
+
+  const json = await response.json();
+
+  if (json.errors) {
+    throw new Error(JSON.stringify(json.errors));
+  }
+
+  return json;
+}
 
   normalizeSort(sort) {
     const allowed = new Set([
