@@ -12,7 +12,7 @@ export class Rating {
     async getRating(data) {
         try {
             const result = await runQuery([[queries.rating.getRating, [data.animeId]]]);
-            return result;
+            return result.rows;
         } catch (error) {
             logger.error('Error fetching rating and comment:', error);
             return 'Error fetching rating and comment';

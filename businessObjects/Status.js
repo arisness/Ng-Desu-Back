@@ -11,8 +11,8 @@ export class Status {
 
     async getStatus(data) {
         try {
-            const result = await runQuery([[queries.status.getStatus, [data.userSession, data.animeId]]]);
-            return result;
+            const result = await runQuery([[queries.status.getStatus, [data.userSession]]]);
+            return result.rows;
         } catch (error) {
             logger.error('Error fetching status:', error);
             return 'Error fetching status';
