@@ -6,9 +6,9 @@
 services:
   api:
     # Pulls the branch name as the image tag
-    image: ghcr.io/arisness/infused:${IMAGE_TAG}
+    image: ghcr.io/arisness/hexum:${IMAGE_TAG}
     # Prefix containers with the business name
-    container_name: infused-api-1
+    container_name: hexum-api-1
     restart: unless-stopped
     networks:
       - web-network       # For Traefik
@@ -27,17 +27,17 @@ services:
       - "traefik.enable=true"
 
       # Catch every request that starts with /api
-      - "traefik.http.routers.infused-api.rule=Host(`infused.kaucrow.com`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.infused-api.entrypoints=websecure"
-      - "traefik.http.routers.infused-api.tls=true"
-      - "traefik.http.routers.infused-api.tls.certresolver=certresolver"
+      - "traefik.http.routers.hexum-api.rule=Host(`hexum.kaucrow.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.hexum-api.entrypoints=websecure"
+      - "traefik.http.routers.hexum-api.tls=true"
+      - "traefik.http.routers.hexum-api.tls.certresolver=certresolver"
 
       # Strip "/api" off the front of every path
-      - "traefik.http.middlewares.infused-api-strip.stripprefix.prefixes=/api"
-      - "traefik.http.routers.infused-api.middlewares=infused-api-strip"
+      - "traefik.http.middlewares.hexum-api-strip.stripprefix.prefixes=/api"
+      - "traefik.http.routers.hexum-api.middlewares=hexum-api-strip"
 
       # Forward the stripped request to the app port
-      - "traefik.http.services.infused-api.loadbalancer.server.port=3001"
+      - "traefik.http.services.hexum-api.loadbalancer.server.port=3001"
 
 networks:
   web-network:
