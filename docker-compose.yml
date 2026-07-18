@@ -37,7 +37,7 @@ services:
       - "traefik.http.routers.ng-desu-api.middlewares=ng-desu-api-strip"
 
       # Forward the stripped request to the app port
-      - "traefik.http.services.ng-desu-api.loadbalancer.server.port=3000"
+      - "traefik.http.services.ng-desu-api.loadbalancer.server.port=8080"
 
 networks:
   web-network:
