@@ -37,7 +37,7 @@ services:
       - "traefik.http.routers.infused-api.middlewares=infused-api-strip"
 
       # Forward the stripped request to the app port
-      - "traefik.http.services.infused-api.loadbalancer.server.port=8080"
+      - "traefik.http.services.infused-api.loadbalancer.server.port=3000"
 
 networks:
   web-network:

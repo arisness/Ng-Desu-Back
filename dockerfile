@@ -12,6 +12,6 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["node", "expressServer.js"]
