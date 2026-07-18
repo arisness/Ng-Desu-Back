@@ -12,7 +12,7 @@ class UserManagement
     async addGeneralUser(req, res){
         try{
             const {username, email, password} = req.body;
-            const r = await runQuery([[queries.user.registerGeneralUser, [username, email, password]]]);
+            const r = await runQuery([[queries.user.registerUser, [username, email, password, 1]]]);
             return res.status(201).json({status: 'success', message: 'User registered successfully.'});
         }
         catch (error){
