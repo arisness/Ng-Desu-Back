@@ -4,7 +4,7 @@ export default class Session
     constructor(app)
     {
        app.use(session({secret: 'web2-project', resave: false, saveUninitialized: false,
-            cookie: {maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'none'}}));
+            cookie: {maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false, sameSite: 'strict'}}));
         
     }
 
