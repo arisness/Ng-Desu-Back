@@ -32,6 +32,10 @@ await loadConfig()
 //app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use(express.json());
+app.use(cors({
+    origin: '*',
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 //app.use(cors({origin: `https://${ip}:5173`, credentials: true}));
 //app.use(express.static(frontendPath));
 
