@@ -6,6 +6,7 @@ import {executeMethod} from './executeMethod.js';
 //import supabaseManager from './basicObjects/Supabase.js';
 import fs from 'fs';
 import { loadEnvFile } from 'process';
+import cors from 'cors';
 loadEnvFile('./config/.env');
 const app = express();
 const {HOST_IP, HOST_PORT} = process.env;
